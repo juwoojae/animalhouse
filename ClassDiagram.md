@@ -2,29 +2,28 @@
 classDiagram
     Main *-- Zoo
 class Main{ 
-    -Zoo zoo
-    +Main() void
-    +menu() void 
-    
+    -Zoo zoo 
+    +menu() void
 }
 class Zoo{
-    -Map<String,Animal> animalRepository
-    -List<Animal> animalList 
-    +addAnimal() void 
-    +removeAnimal() void
-    +findAnimal() void
-    +findAll() void
-    +getAnimalList() void
+    List<Animal> animalRepository
+    +findAnimalKey(String name,String spesice,int age) int
+    +addAnimal() void
+    +animalFeed(int animal_id) void
+    +animalPlay(int animal_id) void
+    +animalSound(int animal_id) void
+    +animalStatus(int animal_id) void
 }
 
     Zoo *-- Animal
 class Animal {
--String name   
--int age  
+    -static int animal_id 
+-String name
+-String spesice
+-int age 
 -int hungerFigure
--int happiness
--String speices 
-+Animal(String name,int age,int hungerFigure,int happiness)
+-int happiness 
++Animal(String name,String spesice,int age)
 +feed() void
 +play() void
 }
