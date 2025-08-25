@@ -9,7 +9,19 @@
 #### 2. 구현방법
 
 `ClassDiagram` 에서 구체적인 계층구조 설명
-* 콘솔창을 통해서 숫자를 입력받아 각 행동에 대한 클래스 메서드호출
+* `Animal` 클래스 (부모클래스)
+  * `name` : 동물의 이름
+  * `spesice` : 동물의 종
+  * `age` : 동물의 나이
+  * `hungerFigure` : 동물의 배고픔 수치
+  * `happiness` : 동물의 행복감
+  * `생성자`: name, spesice,age 초기화
+  * `hungerFigure`,`happiness` 의 `getter`,`setter`
+* `Animal` 을 상속받는 하위클래스
+  *  `Animal` 에서 상속받은 생성자. 동물의 종 클래스들이 각각 고유의 울음소리메서드를 가짐  
+* `Main` 클래스
+  *  `Zoo` 클래스에 의존한다 콘솔창을 띄우고 사용자의 입력에 따라 `Zoo` 내부클래스들을 실행시킴
+    * 콘솔창을 통해서 숫자를 입력받아 각 행동에 대한 클래스 메서드호출
   ```txt
   //콘솔화면
   === 사용자 메뉴 ===
@@ -20,6 +32,11 @@
   5. 원하는 동물 놀아주기
   숫자를 입력하세요: 
   ```
-* `Animal` 클래스의 **하위클래스**로 각 동물의 종에따라 선언하여 **고유 울음소리 메서드**들을 구현
-* `Animal` 클래스에서는 각 동물이 가지는 `이름`, `나이`, `포만도`, `행복도` 변수를 선언, `먹이주기`, `놀아주기` 메서드 구현
-* zoo 클래스는 Map 의 객체를 생성하여  {key:value} = {동물의 이름:new Animal} 로 관리 ,필요에 따라서 모든 동물 조회가능
+* `Zoo` 클래스 동물관리 클래스
+  * `animalRepository`:  `ArrayList` 형태로 업캐스팅으로 모든 동물을 저장하는 데이터베이스
+  * `findAnimalKey`: `Animal animal` 매개변수로 `ArrayList` 에서 iter 를 이용해서 `animalRepository` 에서 인덱스 를 찾는다
+  * `addAnimal` : `Animal animal` 을 매개변수로 받아서 `animalRepository` 에 추가한다
+  * `animalFeed` : idx 를 매개변수로 받고 해당 인덱스의 동물의 배고픔수치를 +1 해준다
+  * `animalPlay` : idx 를 매개변수로 받고 해당 인덱스의 동물의 행복감을 +1 해준다
+  * `animalSound` : idx 를 매개변수로 받고 해당 인덱스의 `Animal` 인스턴스를 다운캐스탱해서 내부메서드 실행
+  * `animalStatus` : idx 를 매개변수로 받고 해당 인덱스의 행복감,배고픔수치,나이를 리턴해준다
