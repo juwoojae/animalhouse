@@ -7,16 +7,16 @@ class Main{
 }
 class Zoo{
     List<Animal> animalRepository
-    +findAnimalKey(String name,String spesice,int age) int
-    +addAnimal() void
-    +animalFeed(int animal_id) void
-    +animalPlay(int animal_id) void
-    +animalSound(int animal_id) void
-    +animalStatus(int animal_id) void
+    +findAnimalIdx(Animal animal) int 
+    +addAnimal(Animal animal) void
+    +animalFeed(int idx) void
+    +animalPlay(int idx) void
+    +animalSound(int idx) void
+    +animalStatus(int idx) void
 }
 
     Zoo *-- Animal
- class Animal {
+class Animal {
     -static int animal_id 
 -String name
 -String spesice
@@ -24,19 +24,19 @@ class Zoo{
 -int hungerFigure
 -int happiness 
 +Animal(String name,String spesice,int age)
-+getHungerFigure() int
++getHungerFigure() int 
 +getHappiness() int 
-+setHungerFigure(int hungerFigure) void
-+setHappiness(int ) void
++setHungerFigure() void
++setHappiness() void
 }
     Animal <|-- Dog
     Animal <|-- Cat
 class Dog{
-    +Dog() 
+    +Dog() void
     +bark() void
 }
 class Cat{
-    +Cat() 
+    +Cat() void
     +meow() void
 }
 ```
