@@ -17,13 +17,13 @@ class Zoo{
 
     Zoo *-- Animal
 class Animal {
-    -static int animal_id 
 -String name
 -String spesice
 -int age 
 -int hungerFigure
 -int happiness 
 +Animal(String name,String spesice,int age)
++sound() void 
 +getHungerFigure() int 
 +getHappiness() int 
 +setHungerFigure() void
@@ -33,10 +33,10 @@ class Animal {
     Animal <|-- Cat
 class Dog{
     +Dog() void
-    +bark() void
+    +@override sound() void 
 }
 class Cat{
     +Cat() void
-    +meow() void
+    +@override sound() void 
 }
 ```
