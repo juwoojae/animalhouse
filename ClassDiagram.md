@@ -16,7 +16,7 @@ class Zoo{
 }
 
     Zoo *-- Animal
-class Animal {
+ class Animal {
     -static int animal_id 
 -String name
 -String spesice
@@ -24,17 +24,19 @@ class Animal {
 -int hungerFigure
 -int happiness 
 +Animal(String name,String spesice,int age)
-+feed() void
-+play() void
++getHungerFigure() int
++getHappiness() int 
++setHungerFigure(int hungerFigure) void
++setHappiness(int ) void
 }
     Animal <|-- Dog
     Animal <|-- Cat
 class Dog{
-    +Dog() void
+    +Dog() 
     +bark() void
 }
 class Cat{
-    +Cat() void
+    +Cat() 
     +meow() void
 }
 ```
