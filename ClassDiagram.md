@@ -2,21 +2,23 @@
 classDiagram
     Main *-- Zoo
 class Main{ 
-    -Zoo zoo 
+    -Zoo zoo
+    +static main() void 
     +menu() void
 }
 class Zoo{
     List<Animal> animalRepository
     +findAnimalIdx(Animal animal) int 
-    +addAnimal(Animal animal) void
-    +animalFeed(int idx) void
-    +animalPlay(int idx) void
-    +animalSound(int idx) void
-    +animalStatus(int idx) void
+    +addAnimal(Animal animal) int 
+    +Feed(int idx) void
+    +Play(int idx) void
+    +Sound(int idx) void
+    +tatus(int idx) void
 }
 
     Zoo *-- Animal
-class Animal {
+class Animal  {
+<<abstract>>
 -String name
 -String spesice
 -int age 
@@ -26,17 +28,17 @@ class Animal {
 +sound() void 
 +getHungerFigure() int 
 +getHappiness() int 
-+setHungerFigure() void
-+setHappiness() void
++setHungerFigure(int hungerFigure) void
++setHappiness(int happiness) void
 }
     Animal <|-- Dog
     Animal <|-- Cat
 class Dog{
-    +Dog() void
+    +Dog(String name,String spesice,int age) void
     +@override sound() void 
 }
 class Cat{
-    +Cat() void
+    +Cat(String name,String spesice,int age) void
     +@override sound() void 
 }
 ```
