@@ -1,4 +1,4 @@
-import exception.EmptyListException;
+import exception.InvalidateCmdInputException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,11 +8,29 @@ class Main {
     static BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     static Zoo zoo = new Zoo();
 
+    //동물의 목록 조회 함수
     static void selectList() {
         int indexing = 0;
         for (Animal animal : zoo.findAll()) {
-            System.out.printf("%d.: %s (%s, %d살)\n", ++indexing, animal.getAge(), animal.getSpecies(), animal.getAge());
+            System.out.printf("%d : %s (%s, %d살)\n", ++indexing, animal.getName(), animal.getSpecies(), animal.getAge());
         }
+    }
+    //1.동물 선택창 조회 2.선택 동물 입력 후 동물리턴하는 메서드
+    static Animal selectAnimal() throws IOException {
+        selectList();
+        Animal animal;
+        while (true) {
+            System.out.printf("선택: ");
+            try {
+                animal = zoo.findByIdx(Integer.parseInt(bufferedReader.readLine()) - 1); //0부터 시작하므로
+                break;
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("명령어 인식 불가");
+            } catch (NumberFormatException e){
+                System.out.println("잘못된입력 (숫자를 입력해 주세요)");
+            }
+        }
+        return animal;
     }
 
     //사용자 메뉴 콘솔 화면
@@ -25,87 +43,109 @@ class Main {
         System.out.println("5. 동물 상태 확인");
         System.out.println("6. 울음소리 듣기");
         System.out.println("7. 종료");
-        System.out.printf("숫자를 입력하세요: ");
-
         int cmd;
-        while (true){
+        while (true) {  // cmd 입력과 예외처리
             try {
+                System.out.printf("잘못된입력 (숫자를 입력해 주세요)");
                 cmd = Integer.parseInt(bufferedReader.readLine());
+                if (cmd > 1 && cmd < 7 && zoo.findAll().isEmpty()) {
+                    throw new InvalidateCmdInputException("animalRepositoryIsEmpty");  //동물의 목록이 없는데 목록을 조회해야하는경우 예외처리
+                }
                 break;
             } catch (NumberFormatException e) {   //입력이 올바른 입력이 아닌경우
-                System.out.println("숫자를 입력해주세요");   //출력후 정상적인 입력을 받을때 까지 루프를 돌린다
+                System.out.println("잘못된입력 (숫자를 입력해 주세요)");   //출력후 정상적인 입력을 받을때 까지 루프를 돌린다
+            } catch (InvalidateCmdInputException e) {
+                System.out.println("현재 동물원에 동물이 없습니다. 동물을 추가해주세요 (동물추가 1.)");
             }
         }
-        if (cmd == 1) { //동물 등록
-            System.out.printf("동물 이름을 입력하세요: ");
-            String name = bufferedReader.readLine();
-            System.out.printf("동물 나이를 입력하세요: ");
-            int species;
-            int age;
-            while (true){
-                try {
-                    age = Integer.parseInt(bufferedReader.readLine());
-                    break;
-                } catch (NumberFormatException e) {   //입력이 올바른 입력이 아닌경우
-                    System.out.println("숫자를 입력해주세요");  //출력후 정상적인 입력을 받을때 까지 루프를 돌린다
-                }
-            }
-            System.out.printf("동물 종류를 선택하세요 (1.강아지 2.고양이): ");
-            while (true){
-                try {
-                   species = Integer.parseInt(bufferedReader.readLine());
-                    break;
-                } catch (NumberFormatException e) {   //입력이 올바른 입력이 아닌경우
-                    System.out.println("숫자를 입력해주세요");   //출력후 정상적인 입력을 받을때 까지 루프를 돌린다
-                }
-            }
-            if (species == 1) {  //이코드 확장성 최악
-                zoo.addAnimal(new Dog(name, "강아지", age));
-                System.out.printf("%s(강아지, %d살)가 등록되었습니다.\n\n", name, age);
-            } else {
-                zoo.addAnimal(new Cat(name, "고양이", age));
-                System.out.printf("%s(고양이, %d살)가 등록되었습니다.\n\n", name, age);
-            }
-        } else if (cmd == 2) { //동물 목록 보기
-            selectList();
-        } else if (cmd == 3) { //동물과 놀기
-            System.out.println("같이 놀 동물을 선택하세요:\n");
-            selectList();
-            System.out.printf("선택: ");
-            Animal animal = zoo.findByIdx(Integer.parseInt(bufferedReader.readLine()) - 1); //0부터 시작하므로
-            animal.play();
-            System.out.printf("%s (%s) 의 행복도가 1 증가 했습니다\n", animal.getName(), animal.getSpecies());
-        } else if (cmd == 4) { //먹이 주기
-            System.out.println("먹이를 줄 동물을 선택하세요:\n");
-            selectList();
-            System.out.printf("선택: ");
-            Animal animal = zoo.findByIdx(Integer.parseInt(bufferedReader.readLine()) - 1); //0부터 시작하므로
-            animal.feed();
-            System.out.printf("%s (%s) 의 포만도 가 1 증가 했습니다\n", animal.getName(), animal.getSpecies());
-        } else if (cmd == 5) {
-            System.out.println("상태를 확인할 동물을 선택하세요:\n");
-            selectList();
-            System.out.printf("선택: ");
-            Animal animal = zoo.findByIdx(Integer.parseInt(bufferedReader.readLine()) - 1); //0부터 시작하므로
-            System.out.printf("%s (%s, %d살) 포만도: %d, 행복도: %d\n", animal.getName(),
-                    animal.getSpecies(),
-                    animal.getAge(),
-                    animal.getHungerFigure(),
-                    animal.getHappiness());
+        // cmd 입력에 따른 동작
 
-        } else if (cmd == 6) {
-            System.out.println("울음 소리를 들을 동물을 선택하세요:\n");
-            selectList();
-            System.out.printf("선택: ");
-            Animal animal = zoo.findByIdx(Integer.parseInt(bufferedReader.readLine()) - 1); //0부터 시작하므로
-            animal.sound();
-        } else {
-            System.out.println("먹이를 줄 동물을 선택하세요:\n");
-            selectList();
-            System.out.printf("선택: ");
-            Animal animal = zoo.findByIdx(Integer.parseInt(bufferedReader.readLine()) - 1); //0부터 시작하므로
-            animal.feed();
-            System.out.printf("%s (%s) 의 포만도 가 1 증가 했습니다\n", animal.getName(), animal.getSpecies());
+        switch (cmd) {
+            case 1: // 동물 등록
+                System.out.printf("동물 이름을 입력하세요: ");
+                String name = bufferedReader.readLine();
+                int species;
+                int age;
+
+                // 나이 입력
+                while (true) {
+                    try {
+                        System.out.printf("동물 나이를 입력하세요: ");
+                        age = Integer.parseInt(bufferedReader.readLine());
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("숫자를 입력해주세요");
+                    }
+                }
+
+                // 동물 종류 선택
+                while (true) {
+                    try {
+                        System.out.printf("동물 종류를 선택하세요 (1.강아지 2.고양이): ");
+                        species = Integer.parseInt(bufferedReader.readLine());
+                        switch (species) {  //여기 코드 확장성 최악
+                            case 1:
+                                zoo.addAnimal(new Dog(name, "강아지", age));
+                                System.out.printf("%s(강아지, %d살)가 등록되었습니다.\n\n", name, age);
+                                break;
+                            case 2:
+                                zoo.addAnimal(new Cat(name, "고양이", age));
+                                System.out.printf("%s(고양이, %d살)가 등록되었습니다.\n\n", name, age);
+                                break;
+                            default: // 선택 동물 목록 이외의 숫자를 입력 받는경우의 예외
+                                throw new IllegalArgumentException("잘못된 인수 입력");
+                        }
+                        break;  //다중 예외처리 구문
+                    } catch (NumberFormatException e) {
+                        System.out.println("숫자를 입력해주세요");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("명령어 인식 불가");
+                    }
+                }
+                break;
+
+            case 2: // 동물 목록 보기
+                selectList();
+                break;
+
+            case 3: // 동물과 놀기
+                System.out.println("같이 놀 동물을 선택하세요:\n");
+                Animal playAnimal = selectAnimal(); //선택된 동물을 찾아서 리턴
+                playAnimal.play();
+                System.out.printf("%s (%s) 의 행복도가 1 증가 했습니다\n", playAnimal.getName(), playAnimal.getSpecies());
+                break;
+
+            case 4: // 먹이 주기
+                System.out.println("먹이를 줄 동물을 선택하세요:\n");
+                Animal feedAnimal = selectAnimal();
+                feedAnimal.feed();
+                System.out.printf("%s (%s) 의 포만도가 1 증가 했습니다\n", feedAnimal.getName(), feedAnimal.getSpecies());
+                break;
+
+            case 5: // 상태 확인
+                System.out.println("상태를 확인할 동물을 선택하세요:\n");
+                Animal statusAnimal = selectAnimal();
+                System.out.printf("%s (%s, %d살) 포만도: %d, 행복도: %d\n",
+                        statusAnimal.getName(),
+                        statusAnimal.getSpecies(),
+                        statusAnimal.getAge(),
+                        statusAnimal.getHungerFigure(),
+                        statusAnimal.getHappiness());
+                break;
+
+            case 6: // 울음소리 듣기
+                System.out.println("울음 소리를 들을 동물을 선택하세요:\n");
+                Animal soundAnimal = selectAnimal();
+                soundAnimal.sound();
+                break;
+
+            case 7: // 종료
+                System.out.println("프로그램을 종료합니다.");
+                System.exit(0);
+                break;
+
+            default:
+                throw new IllegalArgumentException("잘못된 인자");
         }
     }
 
