@@ -1,4 +1,6 @@
-public class Cat extends Animal{
+package domain;
+
+public class Cat extends Animal {
     public Cat(String name,String  species, int age) {
         super(name,species,age);
     }
